@@ -4,9 +4,7 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -136,6 +134,39 @@ public class CarControllerTest {
     }
 
     /**
+     *
+     * UPDATE TEST REQUIED ON THE rubrics
+     */
+    @Test
+    public void updateCar() throws Exception {
+        Car car = getCar();
+        car.getDetails().setModel("Audi");
+        car.setPrice("30000");
+        car.setCondition(Condition.USED);
+        Details details = new Details();
+        Manufacturer manufacturer = new Manufacturer(111, "Audi");
+        details.setManufacturer(manufacturer);
+        details.setModel("Audi");
+        details.setMileage(1000);
+        details.setExternalColor("black");
+        details.setBody("sedan");
+        details.setEngine("3.2L V5");
+        details.setFuelType("Petrol");
+        details.setModelYear(2020);
+        details.setProductionYear(2020);
+        details.setNumberOfDoors(4);
+        car.setDetails(details);
+
+        mvc.perform(
+                        put(new URI("/cars/1"))
+                                .content(json.write(car).getJson())
+                                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                                .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().isOk());
+
+    }
+
+    /**
      * Creates an example Car object for use in testing.
      * @return an example Car object
      */
@@ -158,4 +189,5 @@ public class CarControllerTest {
         car.setCondition(Condition.USED);
         return car;
     }
+
 }
